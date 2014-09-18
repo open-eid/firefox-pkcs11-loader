@@ -1,0 +1,2 @@
+content esteid-pkcs11-module-loader chrome/content/
+overlay chrome://browser/content/browser.xul chrome://esteid-pkcs11-module-loader/content/browser.xul
