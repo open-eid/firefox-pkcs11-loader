@@ -1,0 +1,5 @@
+script:
+- mkdir build
+- cd build
+- cmake ..
+- make zip-xpi
