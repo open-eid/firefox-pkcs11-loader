@@ -3,7 +3,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>{aa84ce40-4253-a00a-8cd6-0800200f9a66}</em:id>
     <em:name>Estonian ID Card authentication module</em:name>
-    <em:version>3.8</em:version>
+    <em:version>@VERSION@</em:version>
     <em:description>Allows to authenticate with Estonian ID Card</em:description>
     <em:iconURL>chrome://esteid-pkcs11-module-loader/content/id-32.png</em:iconURL>
     <em:type>2</em:type>
@@ -18,4 +18,3 @@
     </em:targetApplication>
   </Description>
 </RDF>
-
