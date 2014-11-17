@@ -1,0 +1,21 @@
+Source: esteidpkcs11loader
+Section: web
+Priority: extra
+Maintainer: RIA <info@ria.ee>
+Build-Depends:
+ cdbs,
+ debhelper (>= 7)
+Standards-Version: 3.9.5
+Homepage: https://github.com/open-eid/firefox-pkcs11-loader
+
+Package: esteidpkcs11loader
+Architecture: all
+Depends:
+ opensc,
+ pcscd,
+ ${misc:Depends}
+Description: Firefox PKCS#11 module loader
+ This package provides a helper script for Firefox that sets up the browser for
+ authentication with Estonian ID-card (or other smart cards supported by
+ opensc). Note that this can also be manually configured, in whcih case this
+ package is not required.
