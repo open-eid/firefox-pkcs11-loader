@@ -1,11 +1,11 @@
-Name: esteidpkcs11loader		
+Name: esteidpkcs11loader
 Version: 3.9
 Release: 1%{?dist}
 Summary: EstEID Firefox PKCS#11 loader
-Group: Applications/Internet		
+Group: Applications/Internet
 License: LGPLv2+
-URL: http://www.ria.ee		
-Source0: esteidpkcs11loader.tar.gz	
+URL: http://www.ria.ee
+Source0: esteidpkcs11loader.tar.gz
 BuildRoot: %{_tmppath}/-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArchitectures: noarch
 

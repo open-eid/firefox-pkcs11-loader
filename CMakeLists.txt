@@ -16,7 +16,7 @@ if (NOT DEFINED VERSION)
 endif()
 
 set(XPI_STAGE ${CMAKE_CURRENT_BINARY_DIR}/{aa84ce40-4253-a00a-8cd6-0800200f9a66})
-set(XPI_OUT ${PROJECT_BINARY_DIR}/esteid-pkcs11-module-loader.xpi)
+set(XPI_OUT ${PROJECT_BINARY_DIR}/esteid-pkcs11-module-loader_${VERSION}.xpi)
 
 configure_file(install.rdf.in ${XPI_STAGE}/install.rdf)
 
