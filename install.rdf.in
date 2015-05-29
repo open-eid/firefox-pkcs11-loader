@@ -7,8 +7,8 @@
     <em:description>Allows to authenticate with Estonian ID Card</em:description>
     <em:iconURL>chrome://esteid-pkcs11-module-loader/content/id-32.png</em:iconURL>
     <em:type>2</em:type>
-    <em:creator>AS Sertifitseerimiskeskus</em:creator>
-    <em:homepageURL>http://www.sk.ee</em:homepageURL>
+    <em:creator>RIA</em:creator>
+    <em:homepageURL>http://www.id.ee</em:homepageURL>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
