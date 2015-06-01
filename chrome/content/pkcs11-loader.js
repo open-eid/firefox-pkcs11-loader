@@ -1,8 +1,6 @@
 /*
  * Estonian ID card plugin for web browsers
  *
- * Copyright (C) 2010-2011 Codeborne <info@codeborne.com>
- *
  * This is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -18,48 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
+ 
+(function () {
+  const EstEidModName = "Estonian ID Card";
+  var Ci = Components.interfaces;
+  var Cc = Components.classes;
+  var pkcs11db = Cc["@mozilla.org/security/pkcs11moduledb;1"].createInstance(Ci.nsIPKCS11ModuleDB);
+  var pkcs11 = Cc["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
+  var httpHandler = Cc["@mozilla.org/network/protocol;1?name=http"].getService(Ci.nsIHttpProtocolHandler);
+  //var bits = (httpHandler.oscpu.indexOf(" x86_64") < 0 && httpHandler.oscpu.indexOf(" x64") < 0) ? 32 : 64;
+  var log = function(message) { Application.console.log(message); }
 
-var loaded = false;
+  log("Loading extension " + EstEidModName);
 
-const EstEidModName = "Estonian ID Card";
-const nsModDB = "@mozilla.org/security/pkcs11moduledb;1";
-const nsHttpProtocolHandler = "@mozilla.org/network/protocol;1?name=http";
-const nsPKCS11 = "@mozilla.org/security/pkcs11;1";
-const nsFile = "@mozilla.org/file/local;1";
-const PKCS11_PUB_READABLE_CERT_FLAG  =  0x1<<28; //Stored certs can be read off the token w/o logging in
-
-var Ci = Components.interfaces;
-var Cc = Components.classes;
-
-function log(message) { Application.console.log(message); }
-
-function removeModule(module) {
-  var pkcs11 = Cc[nsPKCS11].getService(Ci.nsIPKCS11);
-  try {
-    pkcs11.deleteModule(module);
-  }
-  catch(e) {
-    log("Unable to remove module " + module + ":" + e);
-  }
-}
-
-function loadModule(moduleDll) {
-  var pkcs11 = Cc[nsPKCS11].getService(Ci.nsIPKCS11);
-  try {
-    pkcs11.addModule(EstEidModName, moduleDll, PKCS11_PUB_READABLE_CERT_FLAG, 0);
-  }
-  catch(e) {
-    log("Unable to load module: " + e);
-  }
-}
-function ModuleLoader() {
-  var platform = detectOS();
-  var bits = detectArchitecture();
-
-  var moduleDll;
-  if (platform == "Macintosh") {
+  var moduleDll = "";
+  switch (httpHandler.platform) {
+  case "Windows":
+    moduleDll = "onepin-opensc-pkcs11.dll";
+    break
+  case "Macintosh":
     moduleDll = "/Library/EstonianIDCard/lib/esteid-pkcs11-onepin.so";
-  } else if (platform == "X11") {
+    break;
+  default:
     [ "/usr/lib64/onepin-opensc-pkcs11.so",
       "/usr/lib64/opensc-pkcs11.so",
       "/usr/lib/x86_64-linux-gnu/onepin-opensc-pkcs11.so",
@@ -70,63 +48,38 @@ function ModuleLoader() {
       "/usr/lib/opensc-pkcs11.so"
     ].some(function(path) {
       log(path);
-      var f = Cc[nsFile].createInstance(Ci.nsILocalFile);
+      var f = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
       f.initWithPath(path);
       if (f.exists())
         moduleDll = path;
       return f.exists();
     });
-  } else if (platform == "Windows") {
-    moduleDll = "onepin-opensc-pkcs11.dll";
-  }
-  else {
-    throw "Failed to detect Operating System."
   }
 
-  var securityModuleDb = Cc[nsModDB].createInstance(Ci.nsIPKCS11ModuleDB);
-  var modules = securityModuleDb.listModules();
-
-  var needToLoad = true;
-  for (; ;) {
-    var module = modules.currentItem().QueryInterface(Ci.nsIPKCS11Module);
-    /* Remove modules that have recognized names but different DLLs */
-    if (module) {
-      if (module.libName == moduleDll && module.name == EstEidModName) {
-        needToLoad = false;
-      } else if (module.name == EstEidModName) {
-        removeModule(module.name)
-      }
+  try {
+    var module = pkcs11db.findModuleByName(EstEidModName);
+    if (module.libName == moduleDll) {
+      log("Module already initialized " + module.name + " (" + module.libName + ")");
+      return;
     }
     try {
-      modules.next();
+      log("Removing module " + module.name + " (" + module.libName + ")");
+      pkcs11.deleteModule(module.name);
     }
     catch(e) {
-      break;
+      log("Unable to remove module:" + e);
     }
   }
-
-  if (needToLoad) {
-    loadModule(moduleDll);
+  catch(e) {
   }
-}
 
-function detectOS() {
-  var httpHandler = Cc[nsHttpProtocolHandler].getService(Ci.nsIHttpProtocolHandler);
-  return httpHandler.platform;
-}
-
-function detectArchitecture() {
-  var httpHandler = Cc[nsHttpProtocolHandler].getService(Ci.nsIHttpProtocolHandler);
-  var osCPU = httpHandler.oscpu;
-  return (osCPU.indexOf(" x86_64") < 0 && osCPU.indexOf(" x64") < 0) ? 32 : 64;
-}
-
-try {
-  if (!loaded) {
-    ModuleLoader();
+  try {
+    log("Loading module " + EstEidModName + " (" + moduleDll + ")");
+    //Stored certs can be read off the token w/o logging in
+    const PKCS11_PUB_READABLE_CERT_FLAG = 0x1<<28;
+    pkcs11.addModule(EstEidModName, moduleDll, PKCS11_PUB_READABLE_CERT_FLAG, 0);
   }
-  loaded = true;
-}
-catch (e) {
-  log(e)
-}
+  catch(e) {
+    log("Unable to load module: " + e);
+  }
+})();

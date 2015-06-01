@@ -1,3 +1,8 @@
+Esteid-pkcs11-module-loader version 3.11.0 release notes
+--------------------------------------
+- Cleanup JavaScript namespace pollution
+
+
 Esteid-pkcs11-module-loader version 3.8.1 release notes
 --------------------------------------
 - Added one-pin module to improve authentication in Firefox web browser in OSX environment.
