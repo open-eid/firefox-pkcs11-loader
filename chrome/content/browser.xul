@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 
-<overlay id="esteid-pkcs11-module-loader"
+<overlay id="firefox-pkcs11-loader"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     <script src="pkcs11-loader.js"/>
 </overlay>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--https://developer.mozilla.org/en/Adding_Extensions_using_the_Windows_Registry-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Firefox PKCS11 Loader" UpgradeCode="07075439-3bae-4884-804e-749bf2d04f06"
+           Language="1033" Version="$(var.MSI_VERSION)" Manufacturer="RIA">
+    <Package Platform="$(var.Platform)" InstallerVersion="405" Compressed="yes" InstallScope="perMachine"/>
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high"/>
+    <MajorUpgrade AllowSameVersionUpgrades="yes" Schedule="afterInstallInitialize" DowngradeErrorMessage=
+      "A newer version of [ProductName] is already installed. If you are trying to downgrade, please uninstall the newer version first."/>
+    <UIRef Id="WixUI_Minimal"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="APPLICATIONFOLDER" Name="Firefox PKCS11 Loader">
+          <Component Id="FirefoxPKCS11Loader" Guid="cf9e4ad5-8015-42f8-9400-3742a521071d" Win64="no">
+            <RegistryValue Root="HKLM" Key="Software\Mozilla\Firefox\Extensions" Name="$(var.GUID)"
+                           Value="[APPLICATIONFOLDER]\$(var.GUID).xpi" Type="string" Action="write"/>
+            <File Source="$(var.GUID).xpi" />
+<?ifdef var.opensc_path ?>
+            <File Source="$(var.opensc_path)\X86\opensc.conf" />
+            <RegistryValue Root="HKLM" Key="Software\OpenSC Project\OpenSC"
+                           Type="string" Name="ConfigFile" Value="[APPLICATIONFOLDER]opensc.conf" />
+<?endif ?>
+          </Component>
+        </Directory>
+      </Directory>
+<?ifdef var.opensc_path ?>
+      <Directory Id="SystemFolder">
+        <Component Id="onepin_opensc_pkcs11_X86" Win64="no">
+          <File Source="$(var.opensc_path)\X86\onepin-opensc-pkcs11.dll" />
+        </Component>
+      </Directory>
+<?endif ?>
+<?if $(var.Platform) = "x64" ?>
+<?ifdef var.opensc_path ?>
+      <Directory Id="System64Folder">
+        <Component Id="onepin_opensc_pkcs11_X64" Win64="yes">
+          <File Source="$(var.opensc_path)\X64\onepin-opensc-pkcs11.dll" Id="onepin_opensc_pkcs11.dll_X64" />
+        </Component>
+      </Directory>
+<?endif ?>
+      <Component Id="FirefoxPKCS11Loader_X64" Win64="yes">
+        <RegistryValue Root="HKLM" Key="Software\Mozilla\Firefox\Extensions" Name="$(var.GUID)"
+                       Value="[APPLICATIONFOLDER]\$(var.GUID).xpi" Type="string" Action="write"/>
+      </Component>
+<?endif ?>
+    </Directory>
+
+    <Feature Id="extension" Title="Firefox PKCS11 Loader">
+      <ComponentRef Id='FirefoxPKCS11Loader'/>
+<?ifdef var.opensc_path ?>
+      <ComponentRef Id='onepin_opensc_pkcs11_X86'/>
+<?endif ?>
+<?if $(var.Platform) = "x64" ?>
+      <ComponentRef Id='FirefoxPKCS11Loader_X64'/>
+<?ifdef var.opensc_path ?>
+      <ComponentRef Id='onepin_opensc_pkcs11_X64'/>
+<?endif ?>
+<?endif ?>
+    </Feature>
+  </Product>
+</Wix>

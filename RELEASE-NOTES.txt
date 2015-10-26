@@ -1,3 +1,8 @@
+Firefox PKCS11 Loader version 3.11.1 release notes
+--------------------------------------
+- Add cmake target to create windows/mac installer
+
+
 Esteid-pkcs11-module-loader version 3.11.0 release notes
 --------------------------------------
 - Cleanup JavaScript namespace pollution

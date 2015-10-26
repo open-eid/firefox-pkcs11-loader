@@ -3,9 +3,9 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>@UUID@</em:id>
     <em:name>Estonian ID Card authentication module</em:name>
-    <em:version>@VERSION@</em:version>
+    <em:version>@PROJECT_VERSION@</em:version>
     <em:description>Allows to authenticate with Estonian ID Card</em:description>
-    <em:iconURL>chrome://esteid-pkcs11-module-loader/content/id-32.png</em:iconURL>
+    <em:iconURL>chrome://firefox-pkcs11-loader/content/id-32.png</em:iconURL>
     <em:type>2</em:type>
     <em:creator>RIA</em:creator>
     <em:homepageURL>http://www.id.ee</em:homepageURL>
