@@ -8,7 +8,7 @@ project(firefox-pkcs11-loader VERSION 3.11.0.${BUILD_VER} LANGUAGES NONE)
 set(FF_MAX_VERSION "*" CACHE STRING "Firefox max version")
 set(UUID "{aa84ce40-4253-a00a-8cd6-0800200f9a66}" CACHE STRING "Extension UUID")
 set(XPI_STAGE ${CMAKE_CURRENT_BINARY_DIR}/${UUID})
-set(OPENSC_PATH "" CACHE PATH "OpenSC Path")
+set(SIGNCERT "" CACHE STRING "Common name of certificate to used sign packages, empty skip signing")
 
 configure_file(install.rdf.in ${XPI_STAGE}/install.rdf)
 
@@ -33,11 +33,14 @@ add_custom_target(zip-xpi
 if(APPLE)
     set(DST "/Library/Application Support/Mozilla/Extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
     install(DIRECTORY ${XPI_STAGE} DESTINATION ${DST})
+    if(SIGNCERT)
+        set(PKG_EXTRA "--sign \"${SIGNCERT}\"")
+    endif()
     add_custom_target(installer
         COMMENT "Creating installer"
         COMMAND mkdir -p "root/${DST}"
         COMMAND cp ${UUID}.xpi "root/${DST}"
-        COMMAND pkgbuild --root root --sign "${SIGNCERT}" --version "${PROJECT_VERSION}$ENV{VER_SUFFIX}"
+        COMMAND pkgbuild --root root "${PKG_EXTRA}" --version "${PROJECT_VERSION}$ENV{VER_SUFFIX}"
                 --identifier "ee.ria.${PROJECT_NAME}" ${PROJECT_NAME}_${PROJECT_VERSION}$ENV{VER_SUFFIX}.pkg
     )
 elseif(UNIX)
@@ -46,6 +49,7 @@ elseif(UNIX)
             DESTINATION "${CMAKE_INSTALL_DATADIR}/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
 elseif(WIN32)
     install(DIRECTORY ${XPI_STAGE} DESTINATION ${CMAKE_INSTALL_PREFIX})
+    set(OPENSC_PATH "" CACHE PATH "OpenSC Path to included in MSI installer")
     if(OPENSC_PATH)
         set(CANDLE_EXTRA " -dopensc_path=\"${OPENSC_PATH}\"")
     endif()
@@ -53,11 +57,11 @@ elseif(WIN32)
     add_custom_target(installer
         COMMENT "Creating installer"
         COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x86 -dPlatform=x86 "${CANDLE_EXTRA}" -dGUID="${UUID}"
-            -dMSI_VERSION=${PROJECT_VERSION} ${CMAKE_SOURCE_DIR}/firefox-pkcs11-loader.wxs
-        COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x86.msi" firefox-pkcs11-loader.wixobj -ext WixUIExtension
+            -dMSI_VERSION=${PROJECT_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
+        COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x86.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
         COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x64 -dPlatform=x64 "${CANDLE_EXTRA}" -dGUID="${UUID}"
-            -dMSI_VERSION=${PROJECT_VERSION} ${CMAKE_SOURCE_DIR}/firefox-pkcs11-loader.wxs
-        COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x64.msi" firefox-pkcs11-loader.wixobj -ext WixUIExtension
+            -dMSI_VERSION=${PROJECT_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
+        COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x64.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
     )
     if(SIGNCERT)
         add_custom_command(TARGET installer POST_BUILD
