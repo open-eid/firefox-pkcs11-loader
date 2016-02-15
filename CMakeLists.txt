@@ -59,9 +59,15 @@ elseif(WIN32)
         COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x86 -dPlatform=x86 "${CANDLE_EXTRA}" -dGUID="${UUID}"
             -dMSI_VERSION=${PROJECT_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
         COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x86.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
+            -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
+            -dWixUIDialogBmp=${CMAKE_SOURCE_DIR}/dlgbmp.bmp
+            -dWixUIBannerBmp=${CMAKE_SOURCE_DIR}/banner.bmp
         COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x64 -dPlatform=x64 "${CANDLE_EXTRA}" -dGUID="${UUID}"
             -dMSI_VERSION=${PROJECT_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
         COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x64.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
+            -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
+            -dWixUIDialogBmp=${CMAKE_SOURCE_DIR}/dlgbmp.bmp
+            -dWixUIBannerBmp=${CMAKE_SOURCE_DIR}/banner.bmp
     )
     if(SIGNCERT)
         add_custom_command(TARGET installer POST_BUILD
