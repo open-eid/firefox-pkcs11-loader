@@ -10,8 +10,8 @@
 
 1. Fetch the source
 
-        git clone --recursive https://github.com/open-eid/firefox-pkcs11-loader
-        cd updater
+        git clone https://github.com/open-eid/firefox-pkcs11-loader
+        cd firefox-pkcs11-loader
 
 2. Configure
 
