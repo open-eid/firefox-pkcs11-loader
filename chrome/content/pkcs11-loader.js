@@ -24,8 +24,7 @@
   var pkcs11db = Cc["@mozilla.org/security/pkcs11moduledb;1"].createInstance(Ci.nsIPKCS11ModuleDB);
   var pkcs11 = Cc["@mozilla.org/security/pkcs11;1"].getService(Ci.nsIPKCS11);
   var httpHandler = Cc["@mozilla.org/network/protocol;1?name=http"].getService(Ci.nsIHttpProtocolHandler);
-  //var bits = (httpHandler.oscpu.indexOf(" x86_64") < 0 && httpHandler.oscpu.indexOf(" x64") < 0) ? 32 : 64;
-  var log = function(message) { Application.console.log(message); }
+  var log = function(message) { console.log(message); }
 
   log("Loading extension " + EstEidModName);
 

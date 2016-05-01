@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-set(BUILD_VER 0)
-if($ENV{BUILD_NUMBER})
-    set(BUILD_VER $ENV{BUILD_NUMBER})
-endif()
-project(firefox-pkcs11-loader VERSION 3.11.0.${BUILD_VER} LANGUAGES NONE)
+project(firefox-pkcs11-loader VERSION 3.12.0 LANGUAGES NONE)
 
 set(FF_MAX_VERSION "*" CACHE STRING "Firefox max version")
 set(UUID "{aa84ce40-4253-a00a-8cd6-0800200f9a66}" CACHE STRING "Extension UUID")

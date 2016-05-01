@@ -12,7 +12,7 @@ deploy:
   provider: releases
   api_key:
     secure: hwaRWJU65JSKQLOlm7hi2hgbpMLh0C248AGlT1JEczM2tbS4pZt1HdkGPy9gMvgd0ohzkEPkzxt2F8DJ7OTMMGiVIDuvFoji9QsGHNFKx38bm8ZwgA/vjX0mbNDHwUIm5cIzAfGZyY7U7Ty91rJOJGhbeVw8PRo9D4+pGHkQ/H4=
-  file: firefox-pkcs11-loader_${VERSION}.0.xpi
+  file: firefox-pkcs11-loader_${VERSION}.xpi
   skip_cleanup: true
   on:
     tags: true
