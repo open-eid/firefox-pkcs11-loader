@@ -73,7 +73,7 @@ elseif(WIN32)
     if(SIGNCERT)
         add_custom_command(TARGET installer POST_BUILD
             COMMAND signtool.exe sign /a /v /s MY /n "${SIGNCERT}" /fd SHA256
-                /du http://installer.id.ee /t http://timestamp.verisign.com/scripts/timstamp.dll
+                /du http://installer.id.ee /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td SHA256
                 "${MSI_FILE}.x64.msi" "${MSI_FILE}.x86.msi"
         )
     endif()
