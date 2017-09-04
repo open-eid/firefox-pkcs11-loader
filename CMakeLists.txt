@@ -35,13 +35,13 @@ if(APPLE)
     set(DST "/Library/Application Support/Mozilla/Extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
     install(DIRECTORY ${XPI_STAGE} DESTINATION ${DST})
     if(SIGNCERT)
-        set(PKG_EXTRA "--sign \"${SIGNCERT}\"")
+        set(PKG_EXTRA --sign ${SIGNCERT})
     endif()
     add_custom_target(installer
         COMMENT "Creating installer"
         COMMAND mkdir -p "root/${DST}"
         COMMAND cp ${UUID}.xpi "root/${DST}"
-        COMMAND pkgbuild --root root "${PKG_EXTRA}" --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
+        COMMAND pkgbuild --root root ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
                 --identifier "ee.ria.${PROJECT_NAME}" ${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}.pkg
     )
 elseif(UNIX)
