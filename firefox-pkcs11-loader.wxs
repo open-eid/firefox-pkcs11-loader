@@ -34,7 +34,9 @@
 <?if $(var.Platform) = "x64" ?>
 <?ifdef var.opensc_path ?>
       <Directory Id="System64Folder">
-        <Component Id="onepin_opensc_pkcs11_X64" Win64="yes">
+        <Component Id="onepin_opensc_pkcs11_X64" Win64="yes" Guid="35c6ab5d-b95f-4937-9045-ff56824088b5">
+          <RegistryValue Root="HKLM" Key="Software\OpenSC Project\OpenSC"
+                           Type="string" Name="ConfigFile" Value="[APPLICATIONFOLDER]opensc.conf" />
           <File Source="$(var.opensc_path)\X64\onepin-opensc-pkcs11.dll" Id="onepin_opensc_pkcs11.dll_X64" />
         </Component>
       </Directory>
