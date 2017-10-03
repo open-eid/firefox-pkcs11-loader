@@ -34,7 +34,7 @@
     moduleDll = "onepin-opensc-pkcs11.dll";
     break
   case "Macintosh":
-    moduleDll = "/Library/EstonianIDCard/lib/esteid-pkcs11-onepin.so";
+    moduleDll = "/Library/OpenSC/lib/onepin-opensc-pkcs11.so";
     break;
   default:
     [ "/usr/lib64/onepin-opensc-pkcs11.so",
