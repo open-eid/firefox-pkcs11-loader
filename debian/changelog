@@ -1,5 +1,5 @@
-esteidpkcs11loader (3.10.0) stable; urgency=low
+firefox-pkcs11-loader (3.13.0) stable; urgency=low
 
   * Initial release
 
- -- RIA <info@ria.ee>  Tue, 15 Nov 2014 15:42:56 +0300
+ -- RIA <info@ria.ee>  Fri, 17 Nov 2017 16:04:56 +0300

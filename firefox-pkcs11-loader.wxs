@@ -15,7 +15,16 @@
           <Component Id="FirefoxPKCS11Loader" Guid="cf9e4ad5-8015-42f8-9400-3742a521071d" Win64="no">
             <RegistryValue Root="HKLM" Key="Software\Mozilla\Firefox\Extensions" Name="$(var.GUID)"
                            Value="[APPLICATIONFOLDER]\$(var.GUID).xpi" Type="string" Action="write"/>
+<?if $(var.Platform) = "x64" ?>
+            <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\onepinopenscpkcs11"
+                           Value="[APPLICATIONFOLDER]onepinopenscpkcs11_Sys64.json" Type="string" Action="write"/>
+            <File Source="$(var.src)\onepinopenscpkcs11_Sys64.json" />
+<?else ?>
+            <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\onepinopenscpkcs11"
+                           Value="[APPLICATIONFOLDER]onepinopenscpkcs11_Sys32.json" Type="string" Action="write"/>
+<?endif ?>
             <File Source="$(var.GUID).xpi" />
+            <File Source="$(var.src)\onepinopenscpkcs11_Sys32.json" />
 <?ifdef var.opensc_path ?>
             <File Source="$(var.opensc_path)\X86\opensc.conf" />
             <RegistryValue Root="HKLM" Key="Software\OpenSC Project\OpenSC"
@@ -44,6 +53,8 @@
       <Component Id="FirefoxPKCS11Loader_X64" Win64="yes">
         <RegistryValue Root="HKLM" Key="Software\Mozilla\Firefox\Extensions" Name="$(var.GUID)"
                        Value="[APPLICATIONFOLDER]\$(var.GUID).xpi" Type="string" Action="write"/>
+        <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\onepinopenscpkcs11"
+                       Value="[APPLICATIONFOLDER]onepinopenscpkcs11_Sys32.json" Type="string" Action="write"/>
       </Component>
 <?endif ?>
     </Directory>

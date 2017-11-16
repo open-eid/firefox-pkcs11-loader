@@ -1,2 +1,0 @@
-content firefox-pkcs11-loader chrome/content/
-overlay chrome://browser/content/browser.xul chrome://firefox-pkcs11-loader/content/browser.xul

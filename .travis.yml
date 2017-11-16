@@ -1,17 +1,15 @@
 sudo: false
+dist: trusty
 script:
 - mkdir build
 - cd build
-- wget --no-check-certificate https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz
-- tar -xzf cmake-3.4.3-Linux-x86_64.tar.gz
-- ./cmake-3.4.3-Linux-x86_64/bin/cmake ..
-- make zip-xpi
+- cmake ..
+- make extension
 before_deploy:
 - export VERSION=${TRAVIS_TAG:1}
 deploy:
   provider: releases
-  api_key:
-    secure: hwaRWJU65JSKQLOlm7hi2hgbpMLh0C248AGlT1JEczM2tbS4pZt1HdkGPy9gMvgd0ohzkEPkzxt2F8DJ7OTMMGiVIDuvFoji9QsGHNFKx38bm8ZwgA/vjX0mbNDHwUIm5cIzAfGZyY7U7Ty91rJOJGhbeVw8PRo9D4+pGHkQ/H4=
+  api_key: $GITHUB_ACCESS_TOKEN
   file: firefox-pkcs11-loader_${VERSION}.xpi
   skip_cleanup: true
   on:
