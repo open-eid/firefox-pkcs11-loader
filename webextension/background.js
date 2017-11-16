@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-
-<!--
- * Estonian ID card plugin for web browsers
+/*
+ * Firefox PKCS11 loader
  *
  * This is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,9 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--->
+ *
+ */
 
-<overlay id="firefox-pkcs11-loader"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-    <script src="pkcs11-loader.js"/>
-</overlay>
+(async function () {
+  if(typeof browser.pkcs11 === 'undefined')
+    return;
+  var modname = "onepinopenscpkcs11";
+  try {
+    var isInstalled = await browser.pkcs11.isModuleInstalled(modname);
+    if(isInstalled) {
+      console.log("module installed: " + modname);
+      return;
+    }
+  } catch (e) {
+    console.error("Unable to load module: ", e);
+    return;
+  }
+  try {
+    const PKCS11_PUB_READABLE_CERT_FLAG = 0x1<<28;
+    await browser.pkcs11.installModule(modname, PKCS11_PUB_READABLE_CERT_FLAG);
+    console.log("Loaded module " + modname);
+  } catch(e) {
+    console.error("Unable to load module: ", e);
+  }
+})();

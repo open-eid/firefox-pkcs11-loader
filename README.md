@@ -21,7 +21,8 @@
 
 3. Build
 
-        make zip-xpi
+        make extension
+        make installer
 
 4. Execute Firefox and install xpi file
 
