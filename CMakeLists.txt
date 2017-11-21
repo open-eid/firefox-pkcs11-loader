@@ -16,18 +16,16 @@ else()
     set(PKG_VERSION "${PROJECT_VERSION}")
 endif()
 if(APPLE)
-    set(DST "/Library/Application Support/Mozilla/Extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
-    set(P11DST "/Library/Application Support/Mozilla/PKCS11Modules" RENAME onepinopenscpkcs11.json)
-    install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi DESTINATION ${DST})
-    install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11.json DESTINATION ${P11DST})
+    install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi
+        DESTINATION "/Library/Application Support/Mozilla/Extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
+    install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json RENAME onepinopenscpkcs11.json
+        DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
     if(SIGNCERT)
         set(PKG_EXTRA --sign ${SIGNCERT})
     endif()
     add_custom_target(installer
         COMMENT "Creating installer"
-        COMMAND mkdir -p "root/${DST}" "root/${P11DST}"
-        COMMAND cp ${PROJECT_BINARY_DIR}/${UUID}.xpi "root/${DST}"
-        COMMAND cp ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json "root/${P11DST}/onepinopenscpkcs11.json"
+        COMMAND make install DESTDIR=root
         COMMAND pkgbuild --root root ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
                 --identifier "ee.ria.${PROJECT_NAME}" ${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}.pkg
     )
@@ -38,6 +36,7 @@ elseif(UNIX)
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11.json
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules")
     add_custom_target(installer
+        COMMENT "Creating installer"
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         COMMAND dh_make --createorig --addmissing --defaultless -y -p ${PROJECT_NAME}_${PROJECT_VERSION}
         COMMAND dpkg-buildpackage -rfakeroot -us -uc
