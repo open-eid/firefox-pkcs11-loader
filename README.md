@@ -5,6 +5,7 @@
 
 ## Building
 [![Build Status](https://travis-ci.org/open-eid/firefox-pkcs11-loader.svg?branch=master)](https://travis-ci.org/open-eid/firefox-pkcs11-loader)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/open-eid/firefox-pkcs11-loader?branch=master&svg=true)](https://ci.appveyor.com/project/open-eid/firefox-pkcs11-loader)
         
 ### Widnows/OSX/Ubuntu
 
@@ -24,7 +25,7 @@
         make extension
         make installer
 
-4. Execute Firefox and install xpi file
+4. Install the package and execute Firefox
 
 ## Support
 Official builds are provided through official distribution point [installer.id.ee](https://installer.id.ee). If you want support, you need to be using official builds. Contact for assistance by email [abi@id.ee](mailto:abi@id.ee) or [www.id.ee](http://www.id.ee).

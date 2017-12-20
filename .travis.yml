@@ -1,16 +1,12 @@
 sudo: false
 dist: trusty
+osx_image: xcode8.3
+os:
+- linux
+- osx
 script:
-- mkdir build
-- cd build
-- cmake ..
-- make extension
-before_deploy:
-- export VERSION=${TRAVIS_TAG:1}
-deploy:
-  provider: releases
-  api_key: $GITHUB_ACCESS_TOKEN
-  file: firefox-pkcs11-loader_${VERSION}.xpi
-  skip_cleanup: true
-  on:
-    tags: true
+- cmake .
+- make installer
+addons:
+  apt:
+    packages: [dh-make, dpkg-dev, devscripts, fakeroot, cdbs]
