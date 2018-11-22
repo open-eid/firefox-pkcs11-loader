@@ -1,3 +1,7 @@
+Firefox PKCS11 Loader library [3.13.1](https://github.com/open-eid/firefox-pkcs11-loader/releases/tag/v3.13.1) release notes
+--------------------------------------
+- Fix Firefox 64 Windows 64 bit support
+
 Firefox PKCS11 Loader library [3.13.0](https://github.com/open-eid/firefox-pkcs11-loader/releases/tag/v3.13.0) release notes
 --------------------------------------
 - Firefox 58 support

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(firefox-pkcs11-loader VERSION 3.13.0 LANGUAGES NONE)
+project(firefox-pkcs11-loader VERSION 3.13.1 LANGUAGES NONE)
 
 set(UUID "{02274e0c-d135-45f0-8a9c-32b35110e10d}" CACHE STRING "Extension UUID")
 set(SIGNCERT "" CACHE STRING "Common name of certificate to used sign packages, empty skip signing")
@@ -39,6 +39,7 @@ elseif(UNIX)
         COMMENT "Creating installer"
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         COMMAND dh_make --createorig --addmissing --defaultless -y -p ${PROJECT_NAME}_${PROJECT_VERSION}
+        COMMAND dch --distribution unstable -v ${PROJECT_VERSION} "Release: ${PROJECT_VERSION}."
         COMMAND dpkg-buildpackage -rfakeroot -us -uc
     )
 elseif(WIN32)
