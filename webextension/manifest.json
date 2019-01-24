@@ -1,16 +1,16 @@
 {
   "manifest_version": 2,
-  "name": "Firefox PKCS11 loader",
+  "name": "PKCS11 loader",
   "description": "Configures Firefox to use PKCS11 for authentication",
   "homepage_url": "https://github.com/open-eid/firefox-pkcs11-loader",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "icons": { "32": "id-32.png" },
   "permissions": [ "pkcs11" ],
   "background": { "scripts": ["background.js"] },
   "applications": {
     "gecko": {
       "id": "{02274e0c-d135-45f0-8a9c-32b35110e10d}",
-      "strict_min_version": "57.0"
+      "strict_min_version": "58.0"
     }
   }
 }

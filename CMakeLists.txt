@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(firefox-pkcs11-loader VERSION 3.13.1 LANGUAGES NONE)
+project(firefox-pkcs11-loader VERSION 3.13.2 LANGUAGES NONE)
 
 set(UUID "{02274e0c-d135-45f0-8a9c-32b35110e10d}" CACHE STRING "Extension UUID")
 set(SIGNCERT "" CACHE STRING "Common name of certificate to used sign packages, empty skip signing")
@@ -20,6 +20,8 @@ if(APPLE)
         DESTINATION "/Library/Application Support/Mozilla/Extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json RENAME onepinopenscpkcs11.json
         DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
+    install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11-mac.json RENAME idemiaawppkcs11.json
+        DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
     if(SIGNCERT)
         set(PKG_EXTRA --sign ${SIGNCERT})
     endif()
@@ -34,6 +36,8 @@ elseif(UNIX)
     install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi
             DESTINATION "${CMAKE_INSTALL_DATADIR}/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11.json
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules")
+    install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11.json
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules")
     add_custom_target(installer
         COMMENT "Creating installer"
