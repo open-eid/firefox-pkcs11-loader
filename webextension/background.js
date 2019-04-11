@@ -20,22 +20,20 @@
 (async function () {
   if(typeof browser.pkcs11 === 'undefined')
     return;
-  var modname = "onepinopenscpkcs11";
-  try {
-    var isInstalled = await browser.pkcs11.isModuleInstalled(modname);
-    if(isInstalled) {
-      console.log("module installed: " + modname);
-      return;
+  async function load(modname) {
+    try {
+      var isInstalled = await browser.pkcs11.isModuleInstalled(modname);
+      if(isInstalled) {
+        console.log("module installed: " + modname);
+        return;
+      }
+      const PKCS11_PUB_READABLE_CERT_FLAG = 0x1<<28;
+      await browser.pkcs11.installModule(modname, PKCS11_PUB_READABLE_CERT_FLAG);
+      console.log("Loaded module " + modname);
+    } catch(e) {
+      console.error("Unable to load module: ", e);
     }
-  } catch (e) {
-    console.error("Unable to load module: ", e);
-    return;
   }
-  try {
-    const PKCS11_PUB_READABLE_CERT_FLAG = 0x1<<28;
-    await browser.pkcs11.installModule(modname, PKCS11_PUB_READABLE_CERT_FLAG);
-    console.log("Loaded module " + modname);
-  } catch(e) {
-    console.error("Unable to load module: ", e);
-  }
+  load("onepinopenscpkcs11");
+  load("idemiaawppkcs11");
 })();

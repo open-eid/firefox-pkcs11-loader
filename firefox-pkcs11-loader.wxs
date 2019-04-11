@@ -17,8 +17,11 @@
                            Value="[APPLICATIONFOLDER]\$(var.GUID).xpi" Type="string" Action="write"/>
             <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\onepinopenscpkcs11"
                            Value="[APPLICATIONFOLDER]onepinopenscpkcs11.json" Type="string" Action="write"/>
+            <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\idemiaawppkcs11"
+                           Value="[APPLICATIONFOLDER]idemiaawppkcs11.json" Type="string" Action="write"/>
             <File Source="$(var.GUID).xpi" />
             <File Source="$(var.src)\onepinopenscpkcs11-win.json" Name="onepinopenscpkcs11.json"/>
+            <File Source="$(var.src)\idemiaawppkcs11-win.json" Name="idemiaawppkcs11.json"/>
 <?ifdef var.opensc_path ?>
             <File Source="$(var.opensc_path)\X86\opensc.conf" />
             <RegistryValue Root="HKLM" Key="Software\OpenSC Project\OpenSC"
@@ -49,6 +52,8 @@
                        Value="[APPLICATIONFOLDER]\$(var.GUID).xpi" Type="string" Action="write"/>
         <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\onepinopenscpkcs11"
                        Value="[APPLICATIONFOLDER]onepinopenscpkcs11.json" Type="string" Action="write"/>
+        <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\idemiaawppkcs11"
+                       Value="[APPLICATIONFOLDER]idemiaawppkcs11.json" Type="string" Action="write"/>
       </Component>
 <?endif ?>
     </Directory>
