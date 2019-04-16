@@ -1,3 +1,7 @@
+Firefox PKCS11 Loader library [3.13.3](https://github.com/open-eid/firefox-pkcs11-loader/releases/tag/v3.13.3) release notes
+--------------------------------------
+- Unload old IDEMIA PKCS11
+
 Firefox PKCS11 Loader library [3.13.2](https://github.com/open-eid/firefox-pkcs11-loader/releases/tag/v3.13.2) release notes
 --------------------------------------
 - Load IDEMIA PKCS11
