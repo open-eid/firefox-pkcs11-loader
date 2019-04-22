@@ -34,6 +34,19 @@
       console.error("Unable to load module: ", e);
     }
   }
+  async function unload(modname) {
+    try {
+      var isInstalled = await browser.pkcs11.isModuleInstalled(modname);
+      if(!isInstalled) {
+        console.log("module is not installed: " + modname);
+        return;
+      }
+      await browser.pkcs11.uninstallModule(modname);
+      console.log("Unloaded module " + modname);
+    } catch(e) {
+      console.error("Unable to unload module: ", e);
+    }
+  }
   load("onepinopenscpkcs11");
-  load("idemiaawppkcs11");
+  unload("idemiaawppkcs11");
 })();

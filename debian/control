@@ -9,10 +9,6 @@ Standards-Version: 3.9.8
 Homepage: https://github.com/open-eid/firefox-pkcs11-loader
 
 Package: firefox-pkcs11-loader
-Replaces:
- estonianidcard
-Breaks:
- estonianidcard
 Architecture: all
 Depends:
  opensc,
