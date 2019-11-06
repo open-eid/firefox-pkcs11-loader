@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(firefox-pkcs11-loader VERSION 3.13.4 LANGUAGES NONE)
 
 set(UUID "{02274e0c-d135-45f0-8a9c-32b35110e10d}" CACHE STRING "Extension UUID")
+set(URL "https://addons.mozilla.org/firefox/downloads/file/3439907/firefox_pkcs11_loader-1.0.5-fx.xpi" CACHE STRING "Mozilla AMO URL")
 set(SIGNCERT "" CACHE STRING "Common name of certificate to used sign packages, empty skip signing")
 
 add_custom_target(extension
@@ -16,8 +17,9 @@ else()
     set(PKG_VERSION "${PROJECT_VERSION}")
 endif()
 if(APPLE)
-    install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi
-        DESTINATION "/Library/Application Support/Mozilla/Extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
+    configure_file(${PROJECT_SOURCE_DIR}/org.mozilla.firefox.plist.in org.mozilla.firefox.plist @ONLY)
+    install(FILES ${PROJECT_BINARY_DIR}/org.mozilla.firefox.plist
+        DESTINATION "/Library/Preferences")
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json RENAME onepinopenscpkcs11.json
         DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
     install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11-mac.json RENAME idemiaawppkcs11.json
@@ -54,13 +56,13 @@ elseif(WIN32)
     set(MSI_FILE "${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}")
     add_custom_target(installer
         COMMENT "Creating installer"
-        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x86 -dPlatform=x86 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dGUID="${UUID}"
+        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x86 -dPlatform=x86 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dURL="${URL}"
             -dMSI_VERSION=${PKG_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
         COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x86.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
             -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
             -dWixUIDialogBmp=${CMAKE_SOURCE_DIR}/dlgbmp.bmp
             -dWixUIBannerBmp=${CMAKE_SOURCE_DIR}/banner.bmp
-        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x64 -dPlatform=x64 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dGUID="${UUID}"
+        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x64 -dPlatform=x64 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dURL="${URL}"
             -dMSI_VERSION=${PKG_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
         COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x64.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
             -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
