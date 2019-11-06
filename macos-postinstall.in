@@ -1,0 +1,36 @@
+#!/bin/sh
+
+PLIST=/Library/Preferences/org.mozilla.firefox.plist
+URL=@URL@
+UUID=@UUID@
+
+defaults write ${PLIST} EnterprisePoliciesEnabled -bool true
+
+if defaults read ${PLIST} Extensions 2> /dev/null | grep -q "Install"; then
+  echo "Extensions/Install exists"
+else
+  defaults write ${PLIST} Extensions -dict Install '()'
+  echo "Creating key path Extensions/Install"
+fi
+
+if defaults read ${PLIST} Extensions | grep -q "${URL}"; then
+  echo "URL ${URL} exists"
+else
+  plutil -insert Extensions.Install.0 -string ${URL} ${PLIST}
+  echo "Added URL ${URL}"
+fi
+
+if defaults read ${PLIST} 2> /dev/null | grep -q "ExtensionSettings"; then
+  echo "ExtensionSettings exists"
+else
+  defaults write ${PLIST} ExtensionSettings '{}'
+fi
+
+if defaults read ${PLIST} ExtensionSettings 2> /dev/null | grep -q "${UUID}"; then
+  echo "ExtensionSettings/${UUID} exists"
+else
+  defaults write ${PLIST} ExtensionSettings -dict "'${UUID}'" '{}'
+  plutil -insert "ExtensionSettings.${UUID}.installation_mode" -string "force_installed" ${PLIST}
+  plutil -insert "ExtensionSettings.${UUID}.install_url" -string "${URL}" ${PLIST}
+  echo "Creating key path ExtensionSettings/${UUID}"
+fi
