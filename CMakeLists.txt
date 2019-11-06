@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(firefox-pkcs11-loader VERSION 3.13.4 LANGUAGES NONE)
 
 set(UUID "{02274e0c-d135-45f0-8a9c-32b35110e10d}" CACHE STRING "Extension UUID")
+set(URL "https://addons.mozilla.org/firefox/downloads/latest/pkcs11-module-loader/latest.xpi" CACHE STRING "Mozilla AMO URL")
 set(SIGNCERT "" CACHE STRING "Common name of certificate to used sign packages, empty skip signing")
 
 add_custom_target(extension
@@ -16,8 +17,7 @@ else()
     set(PKG_VERSION "${PROJECT_VERSION}")
 endif()
 if(APPLE)
-    install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi
-        DESTINATION "/Library/Application Support/Mozilla/Extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/")
+    configure_file(${PROJECT_SOURCE_DIR}/macos-postinstall.in ${PROJECT_BINARY_DIR}/scripts/postinstall @ONLY)
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json RENAME onepinopenscpkcs11.json
         DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
     install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11-mac.json RENAME idemiaawppkcs11.json
@@ -28,7 +28,7 @@ if(APPLE)
     add_custom_target(installer
         COMMENT "Creating installer"
         COMMAND make install DESTDIR=root
-        COMMAND pkgbuild --root root ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
+        COMMAND pkgbuild --root root --scripts scripts ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
                 --identifier "ee.ria.${PROJECT_NAME}" ${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}.pkg
     )
 elseif(UNIX)
@@ -54,13 +54,13 @@ elseif(WIN32)
     set(MSI_FILE "${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}")
     add_custom_target(installer
         COMMENT "Creating installer"
-        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x86 -dPlatform=x86 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dGUID="${UUID}"
+        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x86 -dPlatform=x86 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dURL="${URL}"
             -dMSI_VERSION=${PKG_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
         COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x86.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
             -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
             -dWixUIDialogBmp=${CMAKE_SOURCE_DIR}/dlgbmp.bmp
             -dWixUIBannerBmp=${CMAKE_SOURCE_DIR}/banner.bmp
-        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x64 -dPlatform=x64 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dGUID="${UUID}"
+        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x64 -dPlatform=x64 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dURL="${URL}"
             -dMSI_VERSION=${PKG_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
         COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x64.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
             -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
