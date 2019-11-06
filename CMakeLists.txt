@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(firefox-pkcs11-loader VERSION 3.13.3 LANGUAGES NONE)
+project(firefox-pkcs11-loader VERSION 3.13.4 LANGUAGES NONE)
 
 set(UUID "{02274e0c-d135-45f0-8a9c-32b35110e10d}" CACHE STRING "Extension UUID")
 set(SIGNCERT "" CACHE STRING "Common name of certificate to used sign packages, empty skip signing")
