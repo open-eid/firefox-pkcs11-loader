@@ -1,0 +1,20 @@
+#!/bin/sh
+
+PLIST=/Library/Preferences/org.mozilla.firefox.plist
+URL=@URL@
+
+defaults write ${PLIST} EnterprisePoliciesEnabled -bool true
+
+if defaults read ${PLIST} Extensions 2> /dev/null | grep -q "Install"; then
+  echo "Extensions/Install exists"
+else
+  defaults write ${PLIST} Extensions -dict Install '()'
+  echo "Creating key path Extensions/Install"
+fi
+
+if defaults read ${PLIST} Extensions | grep -q "${URL}"; then
+  echo "URL ${URL} exists"
+else
+  plutil -insert Extensions.Install.0 -string ${URL} ${PLIST}
+  echo "Added URL ${URL}"
+fi

@@ -17,9 +17,7 @@ else()
     set(PKG_VERSION "${PROJECT_VERSION}")
 endif()
 if(APPLE)
-    configure_file(${PROJECT_SOURCE_DIR}/org.mozilla.firefox.plist.in org.mozilla.firefox.plist @ONLY)
-    install(FILES ${PROJECT_BINARY_DIR}/org.mozilla.firefox.plist
-        DESTINATION "/Library/Preferences")
+    configure_file(${PROJECT_SOURCE_DIR}/macos-postinstall.in ${PROJECT_BINARY_DIR}/scripts/postinstall @ONLY)
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json RENAME onepinopenscpkcs11.json
         DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
     install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11-mac.json RENAME idemiaawppkcs11.json
@@ -30,7 +28,7 @@ if(APPLE)
     add_custom_target(installer
         COMMENT "Creating installer"
         COMMAND make install DESTDIR=root
-        COMMAND pkgbuild --root root ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
+        COMMAND pkgbuild --root root --scripts scripts ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
                 --identifier "ee.ria.${PROJECT_NAME}" ${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}.pkg
     )
 elseif(UNIX)

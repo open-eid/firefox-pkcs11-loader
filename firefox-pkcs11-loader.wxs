@@ -13,7 +13,7 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="APPLICATIONFOLDER" Name="Firefox PKCS11 Loader">
           <Component Id="FirefoxPKCS11Loader" Guid="cf9e4ad5-8015-42f8-9400-3742a521071d" Win64="no">
-            <RegistryValue Root="HKLM" Key="Software\Policies\Mozilla\Firefox\Extensions\Install" Name="1"
+            <RegistryValue Root="HKLM" Key="Software\Policies\Mozilla\Firefox\Extensions\Install" Name="2"
                            Value="$(var.URL)" Type="string" Action="write"/>
             <RegistryValue Root="HKLM" Key="Software\Mozilla\PKCS11Modules\onepinopenscpkcs11"
                            Value="[APPLICATIONFOLDER]onepinopenscpkcs11.json" Type="string" Action="write"/>
