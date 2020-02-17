@@ -61,8 +61,8 @@
 <?endif ?>
     </Directory>
     <InstallExecuteSequence>
-      <Custom Action="ExtensionSettingsInstall" Before="WriteRegistryValues">NOT Installed</Custom>
-      <Custom Action="ExtensionSettingsRemove" Before="InstallFinalize">Installed AND NOT UPGRADINGPRODUCTCODE</Custom>
+      <Custom Action="ExtensionSettingsInstall" Before="WriteRegistryValues">NOT ((REMOVE="ALL") AND (NOT UPGRADINGPRODUCTCODE))</Custom>
+      <Custom Action="ExtensionSettingsRemove" Before="InstallFinalize">(REMOVE="ALL") AND (NOT UPGRADINGPRODUCTCODE)</Custom>
     </InstallExecuteSequence>
 
     <Feature Id="extension" Title="Firefox PKCS11 Loader">
