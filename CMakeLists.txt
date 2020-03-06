@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(firefox-pkcs11-loader VERSION 3.13.4 LANGUAGES NONE)
+project(firefox-pkcs11-loader VERSION 3.13.5 LANGUAGES NONE)
 
 set(UUID "{02274e0c-d135-45f0-8a9c-32b35110e10d}" CACHE STRING "Extension UUID")
 set(URL "https://addons.mozilla.org/firefox/downloads/latest/pkcs11-module-loader/latest.xpi" CACHE STRING "Mozilla AMO URL")
@@ -22,14 +22,13 @@ if(APPLE)
         DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
     install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11-mac.json RENAME idemiaawppkcs11.json
         DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
-    if(SIGNCERT)
-        set(PKG_EXTRA --sign ${SIGNCERT})
-    endif()
     add_custom_target(installer
         COMMENT "Creating installer"
         COMMAND make install DESTDIR=root
         COMMAND pkgbuild --root root --scripts scripts ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
+                "$<$<BOOL:${SIGNCERT}>:--sign;${SIGNCERT}>"
                 --identifier "ee.ria.${PROJECT_NAME}" ${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}.pkg
+        COMMAND_EXPAND_LISTS
     )
 elseif(UNIX)
     include(GNUInstallDirs)
