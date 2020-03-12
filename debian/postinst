@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+POLICIES=/usr/lib/firefox/distribution
+mkdir -p ${POLICIES}
+if [ ! -f ${POLICIES}/policies.json ]; then
+    JQARGS=-n;
+else
+    JQARGS=${POLICIES}/policies.json;
+fi
+jq '.policies.ExtensionSettings["{02274e0c-d135-45f0-8a9c-32b35110e10d}"] = {"installation_mode": "normal_installed", "install_url": "https://addons.mozilla.org/firefox/downloads/latest/pkcs11-module-loader/latest.xpi"}' ${JQARGS} > ${POLICIES}/policies.tmp
+mv ${POLICIES}/policies.tmp ${POLICIES}/policies.json
