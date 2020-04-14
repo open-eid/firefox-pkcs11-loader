@@ -13,6 +13,7 @@ Architecture: all
 Depends:
  opensc,
  pcscd,
+ jq,
  ${misc:Depends}
 Description: Firefox PKCS#11 module loader
  This package provides a helper script for Firefox that sets up the browser for
