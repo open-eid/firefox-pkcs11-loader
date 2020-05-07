@@ -9,7 +9,7 @@
 [![Build Status](https://travis-ci.org/open-eid/firefox-pkcs11-loader.svg?branch=master)](https://travis-ci.org/open-eid/firefox-pkcs11-loader)
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/open-eid/firefox-pkcs11-loader?branch=master&svg=true)](https://ci.appveyor.com/project/open-eid/firefox-pkcs11-loader)
         
-### Widnows/OSX/Ubuntu
+### Windows/OSX/Ubuntu
 
 1. Fetch the source
 
