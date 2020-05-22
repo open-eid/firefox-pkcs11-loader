@@ -1,3 +1,12 @@
+Firefox PKCS11 Loader library [3.13.6](https://github.com/open-eid/firefox-pkcs11-loader/releases/tag/v3.13.6) release notes
+--------------------------------------
+- Add jq debian dependency (#28)
+
+Firefox PKCS11 Loader library [3.13.5](https://github.com/open-eid/firefox-pkcs11-loader/releases/tag/v3.13.5) release notes
+--------------------------------------
+- Create policies.json on ubuntu (#26)
+- Change WIX CustomAction execution conditions (#25)
+
 Firefox PKCS11 Loader library [3.13.4](https://github.com/open-eid/firefox-pkcs11-loader/releases/tag/v3.13.4) release notes
 --------------------------------------
 - Distribute Mozilla AMO signed extensions
