@@ -1,0 +1,78 @@
+name: CI
+on: [push, pull_request]
+env:
+  MAKEFLAGS: -j3
+  BUILD_NUMBER: ${{ github.run_number }}
+jobs:
+  macos:
+    name: Build on macOS
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target installer
+        cd ..
+        mkdir upload
+        mv build/*.pkg upload
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: pkg
+        path: upload
+  ubuntu:
+    name: Build on Ubuntu
+    runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      DEBFULLNAME: 'github-actions'
+      DEBEMAIL: 'github-actions@github.com'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+    - name: Install dependencies
+      run: sudo apt-get update -qq && sudo apt-get install -y dh-make dpkg-dev devscripts fakeroot cdbs
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target installer
+        cd ..
+        mkdir upload
+        mv ../*.deb upload
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: deb
+        path: upload
+  windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . --target installer
+        cd ..
+        mkdir upload
+        mv build/*.msi upload
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: msi
+        path: upload
