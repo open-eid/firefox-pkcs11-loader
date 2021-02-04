@@ -18,5 +18,5 @@ Depends:
 Description: Firefox PKCS#11 module loader
  This package provides a helper script for Firefox that sets up the browser for
  authentication with Estonian ID-card (or other smart cards supported by
- opensc). Note that this can also be manually configured, in whcih case this
+ opensc). Note that this can also be manually configured, in which case this
  package is not required.
