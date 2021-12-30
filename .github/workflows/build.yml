@@ -26,6 +26,39 @@ jobs:
       with:
         name: pkg
         path: upload
+  fedora:
+    name: Build on Fedora to ${{ matrix.container }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    strategy:
+      matrix:
+        container: ['fedora:33']
+    env:
+      MAKEFLAGS: -j3
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+      with:
+        submodules: recursive
+    - name: Install Build Deps
+      run: dnf groupinstall -y "Development Tools" "Development Libraries" fedora-packager
+    - name: Install Deps
+      run: |
+        dnf install -y \
+          cmake
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        make
+        make extension
+        make package
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: rpms
+        path: build/firefox-pkcs11-loader*.rpm
   ubuntu:
     name: Build on Ubuntu
     runs-on: ubuntu-latest

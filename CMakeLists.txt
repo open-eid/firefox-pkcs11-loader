@@ -16,6 +16,16 @@ if($ENV{BUILD_NUMBER})
 else()
     set(PKG_VERSION "${PROJECT_VERSION}")
 endif()
+
+set(CPACK_GENERATOR "RPM" "DEB")
+set(CPACK_PACKAGE_NAME "firefox-pkcs11-loader")
+set(CPACK_PACKAGE_RELEASE 1)
+set(CPACK_PACKAGE_CONTACT "Andrus Randveer")
+set(CPACK_PACKAGE_VENDOR "RIA")
+set(CPACK_PACKAGING_INSTALL_PREFIX "/usr/")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${PKG_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
+include(CPack)
+
 if(APPLE)
     configure_file(${PROJECT_SOURCE_DIR}/macos-postinstall.in ${PROJECT_BINARY_DIR}/scripts/postinstall @ONLY)
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json RENAME onepinopenscpkcs11.json
