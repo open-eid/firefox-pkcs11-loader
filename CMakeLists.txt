@@ -24,6 +24,12 @@ set(CPACK_PACKAGE_CONTACT "Andrus Randveer")
 set(CPACK_PACKAGE_VENDOR "RIA")
 set(CPACK_PACKAGING_INSTALL_PREFIX "/usr/")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${PKG_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
+list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+    "/usr/lib/mozilla"
+    "/usr/share/mozilla"
+    "/usr/share/mozilla/extensions"
+    "/usr/share/mozilla/extensions/{<MAGIC_HASH>}"
+)
 include(CPack)
 
 if(APPLE)
