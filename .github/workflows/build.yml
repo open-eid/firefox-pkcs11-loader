@@ -9,103 +9,71 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: 'true'
+      uses: actions/checkout@v3
     - name: Build
       run: |
-        mkdir build
-        cd build
-        cmake ..
-        cmake --build . --target installer
-        cd ..
-        mkdir upload
-        mv build/*.pkg upload
+        cmake -B build -S .
+        cmake --build build --target installer
     - name: Archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: pkg
-        path: upload
+        path: build/*.pkg
   fedora:
     name: Build on Fedora to ${{ matrix.container }}
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     strategy:
       matrix:
-        container: ['fedora:33']
-    env:
-      MAKEFLAGS: -j3
+        container: ['fedora:36']
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
-      with:
-        submodules: recursive
-    - name: Install Build Deps
-      run: dnf groupinstall -y "Development Tools" "Development Libraries" fedora-packager
+      uses: actions/checkout@v3
     - name: Install Deps
-      run: |
-        dnf install -y \
-          cmake
+      run: dnf install -y cmake rpm-build
     - name: Build
       run: |
-        mkdir build
-        cd build
-        cmake ..
-        make
-        make extension
-        make package
+        cmake -B build -S .
+        cmake --build build --target package
     - name: Archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rpms
-        path: build/firefox-pkcs11-loader*.rpm
+        path: build/*.rpm
   ubuntu:
     name: Build on Ubuntu
     runs-on: ubuntu-latest
     env:
       DEBIAN_FRONTEND: noninteractive
-      DEBFULLNAME: 'github-actions'
-      DEBEMAIL: 'github-actions@github.com'
+      DEBFULLNAME: github-actions
+      DEBEMAIL: github-actions@github.com
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: 'true'
+      uses: actions/checkout@v3
     - name: Install dependencies
-      run: sudo apt-get update -qq && sudo apt-get install -y dh-make dpkg-dev devscripts fakeroot cdbs
+      run: sudo apt-get update -qq && sudo apt-get install --no-install-recommends -y dh-make dpkg-dev devscripts fakeroot cdbs
     - name: Build
       run: |
-        mkdir build
-        cd build
-        cmake ..
-        cmake --build . --target installer
-        cd ..
-        mkdir upload
-        mv ../*.deb upload
+        cmake -B build -S .
+        cmake --build build --target installer
+        mv ../*.deb .
     - name: Archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: deb
-        path: upload
+        path: ./*.deb
   windows:
     name: Build on Windows
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: 'true'
+      uses: actions/checkout@v3
     - name: Build
       run: |
-        mkdir build
-        cd build
-        cmake ..
-        cmake --build . --target installer
-        cd ..
-        mkdir upload
-        mv build/*.msi upload
+        cmake -B build -S .
+        cmake --build build --target installer
     - name: Archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: msi
-        path: upload
+        path: build/*.msi
