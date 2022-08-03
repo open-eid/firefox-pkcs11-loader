@@ -5,12 +5,16 @@ set(UUID "{02274e0c-d135-45f0-8a9c-32b35110e10d}" CACHE STRING "Extension UUID")
 set(EXTENSIONS "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}" CACHE STRING "Firefox Extension Directory")
 set(URL "https://addons.mozilla.org/firefox/downloads/latest/pkcs11-module-loader/latest.xpi" CACHE STRING "Mozilla AMO URL")
 set(SIGNCERT "" CACHE STRING "Common name of certificate to used sign packages, empty skip signing")
+set(USESIGNED YES CACHE BOOL "Use Mozilla signed extension")
 
 add_custom_target(extension
     COMMENT "Create extension"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/webextension
     COMMAND ${CMAKE_COMMAND} -E tar c ${PROJECT_BINARY_DIR}/${UUID}.xpi --format=zip .
 )
+if(${USESIGNED})
+    file(DOWNLOAD ${URL} ${PROJECT_BINARY_DIR}/${UUID}.xpi)
+endif()
 
 if($ENV{BUILD_NUMBER})
     set(PKG_VERSION "${PROJECT_VERSION}.$ENV{BUILD_NUMBER}")
