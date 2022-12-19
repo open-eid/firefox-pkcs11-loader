@@ -1,6 +1,6 @@
 Source: firefox-pkcs11-loader
 Section: web
-Priority: extra
+Priority: optional
 Maintainer: RIA <info@ria.ee>
 Build-Depends:
  cdbs,
@@ -11,7 +11,7 @@ Homepage: https://github.com/open-eid/firefox-pkcs11-loader
 Package: firefox-pkcs11-loader
 Architecture: all
 Depends:
- opensc,
+ opensc-pkcs11,
  pcscd,
  jq,
  ${misc:Depends}

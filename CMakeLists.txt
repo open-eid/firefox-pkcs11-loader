@@ -29,10 +29,10 @@ set(CPACK_PACKAGING_INSTALL_PREFIX /usr)
 set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
 set(CPACK_RPM_PACKAGE_REQUIRES opensc)
 list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
-    "/usr/lib/mozilla"
-    "/usr/share/mozilla"
-    "/usr/share/mozilla/extensions"
-    "/usr/share/mozilla/extensions/${EXTENSIONS}"
+    /usr/lib/mozilla
+    /usr/share/mozilla
+    /usr/share/mozilla/extensions
+    /usr/share/mozilla/extensions/${EXTENSIONS}
 )
 include(CPack)
 
@@ -53,11 +53,11 @@ if(APPLE)
 elseif(UNIX)
     include(GNUInstallDirs)
     install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/mozilla/extensions/${EXTENSIONS}/")
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/mozilla/extensions/${EXTENSIONS})
     install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11.json
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules")
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules)
     install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11.json
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules")
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules)
     add_custom_target(installer
         COMMENT "Creating installer"
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}

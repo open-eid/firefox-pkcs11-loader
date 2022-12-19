@@ -77,3 +77,20 @@ jobs:
       with:
         name: msi
         path: build/*.msi
+  codeql:
+    name: Run CodeQL tests
+    if: github.repository == 'open-eid/firefox-pkcs11-loader'
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Install dependencies
+      run: sudo apt-get update -qq && sudo apt-get install --no-install-recommends -y dh-make dpkg-dev devscripts fakeroot cdbs
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
