@@ -4,21 +4,6 @@ env:
   MAKEFLAGS: -j3
   BUILD_NUMBER: ${{ github.run_number }}
 jobs:
-  macos:
-    name: Build on macOS
-    runs-on: macos-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Build
-      run: |
-        cmake -B build -S .
-        cmake --build build --target installer
-    - name: Archive artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: pkg
-        path: build/*.pkg
   fedora:
     name: Build on Fedora to ${{ matrix.container }}
     runs-on: ubuntu-latest
@@ -42,7 +27,7 @@ jobs:
         path: build/*.rpm
   ubuntu:
     name: Build on Ubuntu
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       DEBIAN_FRONTEND: noninteractive
       DEBFULLNAME: github-actions
@@ -51,7 +36,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Install dependencies
-      run: sudo apt-get update -qq && sudo apt-get install --no-install-recommends -y dh-make dpkg-dev devscripts fakeroot cdbs
+      run: sudo apt update -qq && sudo apt install --no-install-recommends -y dh-make dpkg-dev devscripts fakeroot cdbs
     - name: Build
       run: |
         cmake -B build -S .
@@ -62,30 +47,15 @@ jobs:
       with:
         name: deb
         path: ./*.deb
-  windows:
-    name: Build on Windows
-    runs-on: windows-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Build
-      run: |
-        cmake -B build -S .
-        cmake --build build --target installer
-    - name: Archive artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: msi
-        path: build/*.msi
   codeql:
     name: Run CodeQL tests
     if: github.repository == 'open-eid/firefox-pkcs11-loader'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Install dependencies
-      run: sudo apt-get update -qq && sudo apt-get install --no-install-recommends -y dh-make dpkg-dev devscripts fakeroot cdbs
+      run: sudo apt update -qq && sudo apt install --no-install-recommends -y dh-make dpkg-dev devscripts fakeroot cdbs
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
