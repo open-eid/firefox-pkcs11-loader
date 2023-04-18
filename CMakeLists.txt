@@ -36,60 +36,16 @@ list(APPEND CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
 )
 include(CPack)
 
-if(APPLE)
-    configure_file(${PROJECT_SOURCE_DIR}/macos-postinstall.in ${PROJECT_BINARY_DIR}/scripts/postinstall @ONLY)
-    install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11-mac.json RENAME onepinopenscpkcs11.json
-        DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
-    install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11-mac.json RENAME idemiaawppkcs11.json
-        DESTINATION "/Library/Application Support/Mozilla/PKCS11Modules")
-    add_custom_target(installer
-        COMMENT "Creating installer"
-        COMMAND make install DESTDIR=root
-        COMMAND pkgbuild --root root --scripts scripts ${PKG_EXTRA} --version "${PKG_VERSION}$ENV{VER_SUFFIX}"
-                "$<$<BOOL:${SIGNCERT}>:--sign;${SIGNCERT}>"
-                --identifier "ee.ria.${PROJECT_NAME}" ${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}.pkg
-        COMMAND_EXPAND_LISTS
-    )
-elseif(UNIX)
-    include(GNUInstallDirs)
-    install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi
-            DESTINATION ${CMAKE_INSTALL_DATADIR}/mozilla/extensions/${EXTENSIONS})
-    install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11.json
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules)
-    install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11.json
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules)
-    add_custom_target(installer
-        COMMENT "Creating installer"
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        COMMAND dch --distribution unstable -v ${PROJECT_VERSION} "Release: ${PROJECT_VERSION}."
-        COMMAND dpkg-buildpackage -rfakeroot -us -uc
-    )
-elseif(WIN32)
-    set(OPENSC_PATH "" CACHE PATH "OpenSC Path to included in MSI installer")
-    if(OPENSC_PATH)
-        set(CANDLE_EXTRA " -dopensc_path=\"${OPENSC_PATH}\"")
-    endif()
-    set(MSI_FILE "${PROJECT_NAME}_${PKG_VERSION}$ENV{VER_SUFFIX}")
-    add_custom_target(installer
-        COMMENT "Creating installer"
-        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x86 -dPlatform=x86 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dURL="${URL}"
-            -dMSI_VERSION=${PKG_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
-        COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x86.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
-            -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
-            -dWixUIDialogBmp=${CMAKE_SOURCE_DIR}/dlgbmp.bmp
-            -dWixUIBannerBmp=${CMAKE_SOURCE_DIR}/banner.bmp
-        COMMAND "$ENV{WIX}bin\\candle.exe" -nologo -arch x64 -dPlatform=x64 "${CANDLE_EXTRA}" -dsrc="${PROJECT_SOURCE_DIR}" -dURL="${URL}"
-            -dMSI_VERSION=${PKG_VERSION} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.wxs
-        COMMAND "$ENV{WIX}bin\\light.exe" -nologo -o "${MSI_FILE}.x64.msi" ${PROJECT_NAME}.wixobj -ext WixUIExtension
-            -dWixUILicenseRtf=${CMAKE_SOURCE_DIR}/LICENSE.LGPL.rtf
-            -dWixUIDialogBmp=${CMAKE_SOURCE_DIR}/dlgbmp.bmp
-            -dWixUIBannerBmp=${CMAKE_SOURCE_DIR}/banner.bmp
-    )
-    if(SIGNCERT)
-        add_custom_command(TARGET installer POST_BUILD
-            COMMAND signtool.exe sign /a /v /s MY /n "${SIGNCERT}" /fd SHA256
-                /du http://installer.id.ee /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td SHA256
-                "${MSI_FILE}.x64.msi" "${MSI_FILE}.x86.msi"
-        )
-    endif()
-endif()
+include(GNUInstallDirs)
+install(FILES ${PROJECT_BINARY_DIR}/${UUID}.xpi
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/mozilla/extensions/${EXTENSIONS})
+install(FILES ${PROJECT_SOURCE_DIR}/onepinopenscpkcs11.json
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules)
+install(FILES ${PROJECT_SOURCE_DIR}/idemiaawppkcs11.json
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/mozilla/pkcs11-modules)
+add_custom_target(installer
+    COMMENT "Creating installer"
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    COMMAND dch --distribution unstable -v ${PROJECT_VERSION} "Release: ${PROJECT_VERSION}."
+    COMMAND dpkg-buildpackage -rfakeroot -us -uc
+)
