@@ -2,6 +2,9 @@
 
 ![European Regional Development Fund](https://github.com/open-eid/DigiDoc4-Client/blob/master/client/images/EL_Regionaalarengu_Fond.png "European Regional Development Fund - DO NOT REMOVE THIS IMAGE BEFORE 05.03.2020")
 
+**NB! Please note that the active development and management of the Firefox PKCS11 Loader component has ended due to the transition to the OpenSC pkcs11-register tool.
+We won't be accepting pull requests or responding to issues for this project anymore.**
+
 * License: LGPL 2.1
 * &copy; Estonian Information System Authority
 
